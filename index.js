@@ -1,104 +1,114 @@
-const fs = require('fs');
+const fs = require('fs')
 
-const nomeArquivo = "labirinto100.txt";
-let caracteresPorLinha = [];
+function readFile(name, callback) {
+    const startTime = process.hrtime()
 
-fs.readFile(nomeArquivo, 'utf8', (err, data) => {
-    if (err) {
-        console.error(err);
-        return;
+    fs.readFile(name, 'utf8', (err, data) => {
+        if (err) {
+            console.error(err)
+            return
+        }
+        const lineCharacters = data.split('\n').map(line => line.split(''))
+        const endTime = process.hrtime(startTime)
+        const elapsedTime = endTime[0] * 1000 + endTime[1] / 1000000000
+
+        callback(lineCharacters, elapsedTime)
+    })
+}
+
+function executeCase(lineCharacters, elapsedTime) {
+    let actualLine = 0
+    let actualPosition = 0
+    let partialSum = ""
+    let sum = 0
+    let direction = 1
+
+    while (lineCharacters[actualLine][actualPosition] !== "-") {
+        actualLine++
     }
-    caracteresPorLinha = data.split('\n').map(line => line.split(''));
-    
-    let linhaAtual = 0;
-    let posicaoAtual = 0;
-    let numero = "";
-    let soma = 0;
-    let direcao = 1;
 
-    while (caracteresPorLinha[linhaAtual][posicaoAtual] !== "-") {
-        linhaAtual++;
-    }
-
-    while (caracteresPorLinha[linhaAtual][posicaoAtual] !== "#") {
-        switch (direcao) {
+    while (lineCharacters[actualLine][actualPosition] !== "#") {
+        switch (direction) {
             case 1:
-                if ((parseInt(caracteresPorLinha[linhaAtual][posicaoAtual]))) {
-                    while ((parseInt(caracteresPorLinha[linhaAtual][posicaoAtual]))) {
-                        numero += caracteresPorLinha[linhaAtual][posicaoAtual];
-                        posicaoAtual++;
+                if ((parseInt(lineCharacters[actualLine][actualPosition]))) {
+                    while ((parseInt(lineCharacters[actualLine][actualPosition]))) {
+                        partialSum += lineCharacters[actualLine][actualPosition]
+                        actualPosition++
                     }
-                    soma += parseInt(numero);
-                    numero = "";
+                    sum += parseInt(partialSum)
+                    partialSum = ""
                 }
-                if (caracteresPorLinha[linhaAtual][posicaoAtual] === "\\") {
-                    direcao = 4;
-                    linhaAtual++;
-                } else if (caracteresPorLinha[linhaAtual][posicaoAtual] === "/") {
-                    direcao = 3;
-                    linhaAtual--;
+                if (lineCharacters[actualLine][actualPosition] === "\\") {
+                    direction = 4
+                    actualLine++
+                } else if (lineCharacters[actualLine][actualPosition] === "/") {
+                    direction = 3
+                    actualLine--
                 } else {
-                    posicaoAtual++;
+                    actualPosition++
                 }
-                break;
+                break
             case 2:
-                if ((parseInt(caracteresPorLinha[linhaAtual][posicaoAtual]))) {
-                    while ((parseInt(caracteresPorLinha[linhaAtual][posicaoAtual]))) {
-                        numero += caracteresPorLinha[linhaAtual][posicaoAtual];
-                        posicaoAtual--;
+                if ((parseInt(lineCharacters[actualLine][actualPosition]))) {
+                    while ((parseInt(lineCharacters[actualLine][actualPosition]))) {
+                        partialSum += lineCharacters[actualLine][actualPosition]
+                        actualPosition--
                     }
-                    soma += parseInt(numero);
-                    numero = "";
+                    sum += parseInt(partialSum)
+                    partialSum = ""
                 }
-                if (caracteresPorLinha[linhaAtual][posicaoAtual] === "\\") {
-                    direcao = 3;
-                    linhaAtual--;
-                } else if (caracteresPorLinha[linhaAtual][posicaoAtual] === "/") {
-                    direcao = 4;
-                    linhaAtual++;
+                if (lineCharacters[actualLine][actualPosition] === "\\") {
+                    direction = 3
+                    actualLine--
+                } else if (lineCharacters[actualLine][actualPosition] === "/") {
+                    direction = 4
+                    actualLine++
                 } else {
-                    posicaoAtual--;
+                    actualPosition--
                 }
-                break;
+                break
             case 3:
-                if ((parseInt(caracteresPorLinha[linhaAtual][posicaoAtual]))) {
-                    while ((parseInt(caracteresPorLinha[linhaAtual][posicaoAtual]))) {
-                        numero += caracteresPorLinha[linhaAtual][posicaoAtual];
-                        linhaAtual--;
+                if ((parseInt(lineCharacters[actualLine][actualPosition]))) {
+                    while ((parseInt(lineCharacters[actualLine][actualPosition]))) {
+                        partialSum += lineCharacters[actualLine][actualPosition]
+                        actualLine--
                     }
-                    soma += parseInt(numero);
-                    numero = "";
+                    sum += parseInt(partialSum)
+                    partialSum = ""
                 }
-                if (caracteresPorLinha[linhaAtual][posicaoAtual] === "\\") {
-                    direcao = 2;
-                    posicaoAtual--;
-                } else if (caracteresPorLinha[linhaAtual][posicaoAtual] === "/") {
-                    direcao = 1;
-                    posicaoAtual++;
+                if (lineCharacters[actualLine][actualPosition] === "\\") {
+                    direction = 2
+                    actualPosition--
+                } else if (lineCharacters[actualLine][actualPosition] === "/") {
+                    direction = 1
+                    actualPosition++
                 } else {
-                    linhaAtual--;
+                    actualLine--
                 }
-                break;
+                break
             case 4:
-                if ((parseInt(caracteresPorLinha[linhaAtual][posicaoAtual]))) {
-                    while ((parseInt(caracteresPorLinha[linhaAtual][posicaoAtual]))) {
-                        numero += caracteresPorLinha[linhaAtual][posicaoAtual];
-                        linhaAtual++;
+                if ((parseInt(lineCharacters[actualLine][actualPosition]))) {
+                    while ((parseInt(lineCharacters[actualLine][actualPosition]))) {
+                        partialSum += lineCharacters[actualLine][actualPosition]
+                        actualLine++
                     }
-                    soma += parseInt(numero);
-                    numero = "";
+                    sum += parseInt(partialSum)
+                    partialSum = ""
                 }
-                if (caracteresPorLinha[linhaAtual][posicaoAtual] === "\\") {
-                    direcao = 1;
-                    posicaoAtual++;
-                } else if (caracteresPorLinha[linhaAtual][posicaoAtual] === "/") {
-                    direcao = 2;
-                    posicaoAtual--;
+                if (lineCharacters[actualLine][actualPosition] === "\\") {
+                    direction = 1
+                    actualPosition++
+                } else if (lineCharacters[actualLine][actualPosition] === "/") {
+                    direction = 2
+                    actualPosition--
                 } else {
-                    linhaAtual++;
+                    actualLine++
                 }
-                break;
+                break
         }
     }
-    console.log("soma total = " + soma);
-});
+    console.log("Sum total = " + sum)
+    console.log("Tempo de leitura do arquivo: " + elapsedTime.toFixed(2) + " segundos")
+}
+
+readFile("labirinto2000.txt", executeCase)
